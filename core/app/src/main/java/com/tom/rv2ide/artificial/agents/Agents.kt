@@ -144,7 +144,17 @@ class Agents(ctx: Context) {
     "local-model"
   )
   
-  val ai_agents = openai_models + claude_models + gemini_models + deepseek_models + grok_models + localllm_models
+  private val cursor_models = arrayOf(
+    "cursor-small",
+    "cursor-large"
+  )
+  
+  private val letta_models = arrayOf(
+    "letta-free",
+    "letta-pro"
+  )
+  
+  val ai_agents = openai_models + claude_models + gemini_models + deepseek_models + grok_models + localllm_models + cursor_models + letta_models
   
   fun getModelsForProvider(providerId: String): Array<String> {
     return when(providerId) {
@@ -154,6 +164,8 @@ class Agents(ctx: Context) {
       "deepseek" -> deepseek_models
       "grok" -> grok_models
       "localllm" -> localllm_models
+      "cursor" -> cursor_models
+      "letta" -> letta_models
       else -> gemini_models
     }
   }
@@ -166,6 +178,8 @@ class Agents(ctx: Context) {
       modelName in deepseek_models -> "deepseek"
       modelName in grok_models -> "grok"
       modelName in localllm_models -> "localllm"
+      modelName in cursor_models -> "cursor"
+      modelName in letta_models -> "letta"
       else -> null
     }
   }
@@ -177,6 +191,8 @@ class Agents(ctx: Context) {
           name in claude_models -> "claude"
           name in deepseek_models -> "deepseek"
           name in grok_models -> "grok"
+          name in cursor_models -> "cursor"
+          name in letta_models -> "letta"
           else -> sp.getString(PROVIDER_KEY, "gemini") ?: "gemini"
       }
       
@@ -194,6 +210,8 @@ class Agents(ctx: Context) {
       "claude" -> "claude-sonnet-4-20250514"
       "deepseek" -> "deepseek-chat"
       "grok" -> "grok-beta"
+      "cursor" -> "cursor-small"
+      "letta" -> "letta-free"
       else -> "gemini-2.5-pro"
     }
   }

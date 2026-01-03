@@ -1,4 +1,4 @@
-name: Build Android Code Studio
+name: Build Android Code Studio a
 
 on:
   push:
@@ -7,13 +7,14 @@ on:
       - "main" 
       - "indexing"
       - "release/**"
+      - "copilot/**"
     paths-ignore:
       - '**.md'
       - '**.json'
       - 'fastlane/**'
       - '.github/workflows/crowdin_contributors.yml'
   pull_request:
-    branches: [ "dev" ]
+    branches: [ "dev", "main" ]
     paths-ignore:
       - '**.md'
       - '**.json'
@@ -68,31 +69,21 @@ jobs:
           echo "=== SigningDirectory ==="
           ls -la core/app/signing/ || echo "core/app/signing directory not found"
       - name: Assemble Debug APK
+        env:
+          SIGNING_STORE_PASSWORD: "123456"
+          SIGNING_KEY_PASSWORD: "123456"
         run: ./gradlew :core:app:assembleDebug
-        # run: ./gradlew :core:app:assembleRelease
       - name: List APK files (debug)
         run: ls -la core/app/build/outputs/apk/debug/
-      - name: Upload arm64-v8a Release APK
+      - name: Upload arm64-v8a Debug APK
         uses: actions/upload-artifact@v4
         with:
           name: apk-arm64-v8a-debug
           path: core/app/build/outputs/apk/debug/*arm64-v8a*.apk
         if: always()
-      - name: Upload armeabi-v7a Release APK
+      - name: Upload armeabi-v7a Debug APK
         uses: actions/upload-artifact@v4
         with:
-          name: apk-armeabi-v7a-release
-          path: core/app/build/outputs/apk/release/*armeabi-v7a*.apk
-        if: always()
-      - name: Upload x86_64 Release APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: apk-x86_64-release
-          path: core/app/build/outputs/apk/release/*x86_64*.apk
-        if: always()
-      - name: Upload universal Release APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: apk-universal-release
-          path: core/app/build/outputs/apk/release/*universal*.apk
+          name: apk-armeabi-v7a-debug
+          path: core/app/build/outputs/apk/debug/*armeabi-v7a*.apk
         if: always()
